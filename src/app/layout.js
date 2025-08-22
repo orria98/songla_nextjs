@@ -1,5 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import AuthProvider from "./SessionProvider";
+import { DailySongProvider } from "@/context/DailySongContext"; // adjust path if needed
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,7 +22,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+        <DailySongProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </DailySongProvider>
       </body>
     </html>
   );
