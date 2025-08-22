@@ -1,5 +1,5 @@
 export async function loginUser(username, password) {
-  const res = await fetch("http://localhost:3000/auth/login", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -18,7 +18,7 @@ export async function loginUser(username, password) {
 }
 
 export async function signUpUser(username, password) {
-  const res = await fetch("http://localhost:3000/auth/register", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -37,10 +37,13 @@ export async function signUpUser(username, password) {
 }
 
 export async function refreshAccessToken() {
-  const res = await fetch("http://localhost:3000/auth/refresh-token", {
-    method: "POST",
-    credentials: "include",
-  });
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-token`,
+    {
+      method: "POST",
+      credentials: "include",
+    }
+  );
 
   if (!res.ok) throw new Error("Failed to refresh token");
   const data = await res.json();
@@ -48,7 +51,7 @@ export async function refreshAccessToken() {
 }
 
 export async function fetchProtectedData(accessToken) {
-  const res = await fetch("http://localhost:3000/protected", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/protected`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -66,7 +69,7 @@ export async function fetchProtectedData(accessToken) {
 }
 
 export async function getMe(accessToken) {
-  const res = await fetch("http://localhost:3000/auth/me", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -79,7 +82,7 @@ export async function getMe(accessToken) {
 }
 
 export async function postDailySong(songData, accessToken) {
-  const res = await fetch("http://localhost:3000/api/daily", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/daily`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -97,7 +100,7 @@ export async function postDailySong(songData, accessToken) {
 }
 
 export async function getDailySong() {
-  const res = await fetch("http://localhost:3000/api/daily", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/daily`, {
     method: "GET",
     credentials: "include",
   });
