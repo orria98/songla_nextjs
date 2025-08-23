@@ -3,8 +3,10 @@ import { getAllSongs } from "@/lib/api";
 import styles from "./GuessSongStyle.module.css";
 import MyAutocomplete from "../autocomplete/MyAutocomplete";
 
-const GuessSongModal = ({ session, onClose, onSelect }) => {
+const GuessSongModal = ({ onClose, onSelect }) => {
   const [songs, setSongs] = useState([]);
+  const [selectedSong, setSelectedSong] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchSongs = async () => {
