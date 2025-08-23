@@ -101,11 +101,11 @@ audio.audioPlayer::-webkit-media-controls-volume-slider {
 }
 
 .main {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
   grid-row-start: 2;
-  width: 900px;
+  width: 100%;           
+  max-width: 900px;      
+  padding-inline: 16px;  
+  margin: 0 auto;        
 }
 
 .header {
@@ -124,15 +124,15 @@ audio.audioPlayer::-webkit-media-controls-volume-slider {
 }
 
 .songInfo {
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  justify-items: center;
 }
 
 .songInfoItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr;
   color: var(--foreground);
 }
 
@@ -190,11 +190,10 @@ audio.audioPlayer::-webkit-media-controls-volume-slider {
 }
 
 .cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: center;
 }
 
 .card {
@@ -310,3 +309,43 @@ a.secondary {
 
 
 
+@media (max-width: 746px) {
+  .page {
+    padding: 16px;
+    padding-bottom: 80px;
+  }
+
+  .main {
+    align-items: center;
+  }
+
+  .main ol {
+    text-align: center;
+  }
+
+  .ctas {
+    flex-direction: column;
+  }
+
+  .ctas a {
+    font-size: 14px;
+    height: 40px;
+    padding: 0 16px;
+  }
+
+  a.secondary {
+    min-width: auto;
+  }
+
+  .footer {
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+
+}

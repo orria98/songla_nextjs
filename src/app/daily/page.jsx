@@ -2,19 +2,21 @@
 import styles from "./page.module.css";
 import { useState, useEffect, useRef } from "react";
 import { getDailySong } from "@/lib/api";
-import { useDailySong } from "@/context/DailySongContext";
+import GuessSongModal from "@/components/modal/GuessSongModal.jsx";
 
 const Daily = () => {
   const [dailySong, setDailySong] = useState(null);
   const [instruments, setInstruments] = useState([]);
   const [currentInstrument, setCurrentInstrument] = useState(null);
   const [disabledInstruments, setDisabledInstruments] = useState([]);
-  const audioRef = useRef(null);
-  const currentInstrumentRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [loading, setLoading] = useState(true);
   const [revealHint, setRevealHint] = useState(false);
   const [skipDisabled, setSkipDisabled] = useState(false);
+  const [isGuessModalOpen, setIsGuessModalOpen] = useState(false);
+
+  const audioRef = useRef(null);
+  const currentInstrumentRef = useRef(null);
 
   useEffect(() => {
     const fetchDailySong = async () => {
@@ -146,6 +148,7 @@ const Daily = () => {
               </div>
             </div>
           </div>
+          {revealHint && <button className={styles.button}>Gefast upp</button>}
           <div className={styles.audioPlayerContainer}>
             <audio
               ref={audioRef}
@@ -154,7 +157,12 @@ const Daily = () => {
             />
           </div>
           <div className={styles.controls}>
-            <button className={styles.button}>Guess</button>
+            <button
+              className={styles.button}
+              onClick={() => setIsGuessModalOpen(true)}
+            >
+              Guess
+            </button>
             <button
               className={styles.controlButton}
               type="button"
@@ -177,6 +185,14 @@ const Daily = () => {
           </div>
         </div>
       </main>
+
+      {isGuessModalOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <GuessSongModal onClose={() => setIsGuessModalOpen(false)} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

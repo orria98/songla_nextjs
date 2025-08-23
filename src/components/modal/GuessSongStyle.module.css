@@ -1,0 +1,72 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4); 
+  backdrop-filter: blur(5px); 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal {
+  background: var(--background);
+  height: 30vh;
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  text-align: center;   
+}
+
+.modal h1 a {
+  color: var(--foreground);
+  text-decoration: none;
+}
+
+.modal input {
+    background-color: white;
+    color: black;
+    width: 70%;
+    height: 40px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid var(--gray-alpha-200);
+    font-size: 16px;
+}
+
+.closeButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #555;
+}
+
+.closeButton:hover {
+  color: black;
+}
+
+.button {
+  margin-top: 20px;
+  background: var(--foreground);
+  color: var(--background);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.button:hover {
+  transform: scale(1.05);
+}

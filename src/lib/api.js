@@ -112,3 +112,17 @@ export async function getDailySong() {
     throw new Error(data.message || "Failed to fetch daily song");
   }
 }
+
+export async function getAllSongs() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/allSongs`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  const data = await res.json();
+  if (res.ok) {
+    return data;
+  } else {
+    throw new Error(data.message || "Failed to fetch all songs");
+  }
+}
