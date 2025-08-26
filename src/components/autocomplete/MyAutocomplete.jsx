@@ -1,7 +1,5 @@
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { useState, useEffect } from "react";
-import { getAllSongs } from "@/lib/api";
 import styles from "./style.module.css";
 
 export default function MyAutocomplete({ options, label, onSelect }) {

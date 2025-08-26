@@ -3,7 +3,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 // NextAuth config
 export const authOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -26,7 +25,7 @@ export const authOptions = {
 
         const user = await res.json();
         if (res.ok && user) {
-          return user; // returned object is saved in JWT
+          return user;
         }
         return null;
       },
@@ -35,15 +34,12 @@ export const authOptions = {
 
   callbacks: {
     async jwt({ token, user }) {
-      // Only add accessToken if present in user object
       if (user?.accessToken) {
         token.accessToken = user.accessToken;
       }
-      // You can also add other user info if needed
       return token;
     },
     async session({ session, token }) {
-      // Only add accessToken if present in token
       if (token?.accessToken) {
         session.user.accessToken = token.accessToken;
       }
@@ -51,11 +47,10 @@ export const authOptions = {
     },
   },
   pages: {
-    signIn: "/login", // optional: custom login page
+    signIn: "/login",
   },
 };
 
-// Route handler for NextAuth
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

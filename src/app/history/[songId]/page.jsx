@@ -1,10 +1,10 @@
 "use client";
 import styles from "./page.module.css";
 import { useState, useEffect, useRef } from "react";
-import { getDailySong } from "@/lib/api";
+import { getDailySong, getSongById } from "@/lib/api";
+import { useRouter, useParams } from "next/navigation";
 import GuessSongModal from "@/components/modal/GuessSongModal.jsx";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
-import cookies from "js-cookie";
 
 const Daily = () => {
   const [dailySong, setDailySong] = useState(null);
@@ -16,7 +16,9 @@ const Daily = () => {
   const [revealHint, setRevealHint] = useState(false);
   const [skipDisabled, setSkipDisabled] = useState(false);
   const [isGuessModalOpen, setIsGuessModalOpen] = useState(false);
-  const [gameEnd, setGameEnd] = useState(false);
+
+  const router = useRouter();
+  const { songId } = useParams();
 
   const audioRef = useRef(null);
   const currentInstrumentRef = useRef(null);
@@ -24,7 +26,7 @@ const Daily = () => {
   useEffect(() => {
     const fetchDailySong = async () => {
       try {
-        const song = await getDailySong();
+        const song = await getSongById(songId);
         setDailySong(song);
         const fetchedInstruments = song.instruments.map((inst) => ({
           name: inst.name,
@@ -92,6 +94,10 @@ const Daily = () => {
     };
   }, [currentInstrument]);
 
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
   const handleConfirmSong = (selectedSong) => {
     const [artist, title] = selectedSong.split(" - ");
 
@@ -114,10 +120,6 @@ const Daily = () => {
       }
     }
   };
-
-  if (loading) {
-    return <LoadingSpinner />;
-  }
 
   return (
     <div className={styles.page}>
@@ -174,11 +176,7 @@ const Daily = () => {
               </div>
             </div>
           </div>
-          {revealHint && (
-            <button className={styles.button} onClick={() => setGameEnd(true)}>
-              Gefast upp
-            </button>
-          )}
+          {revealHint && <button className={styles.button}>Gefast upp</button>}
           <div className={styles.audioPlayerContainer}>
             <audio
               ref={audioRef}
@@ -190,7 +188,6 @@ const Daily = () => {
             <button
               className={styles.button}
               onClick={() => setIsGuessModalOpen(true)}
-              onSelect={handleConfirmSong}
             >
               Guess
             </button>
@@ -220,7 +217,10 @@ const Daily = () => {
       {isGuessModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
-            <GuessSongModal onClose={() => setIsGuessModalOpen(false)} />
+            <GuessSongModal
+              onClose={() => setIsGuessModalOpen(false)}
+              onSelect={handleConfirmSong}
+            />
           </div>
         </div>
       )}

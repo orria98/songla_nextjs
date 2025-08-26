@@ -18,6 +18,7 @@ const AdminPage = () => {
     "microphone.png",
     "piano.png",
     "vst.png",
+    "horn.png",
   ];
 
   const confirmInstruments = async () => {
@@ -90,6 +91,7 @@ const AdminPage = () => {
       })),
     };
     console.log("Song data: ", songData);
+    console.log("User access token: ", session.user.accessToken);
     const res = await postDailySong(songData, session.user.accessToken);
     if (res.ok) {
       console.log("Song added successfully");

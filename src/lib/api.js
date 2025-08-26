@@ -126,3 +126,37 @@ export async function getAllSongs() {
     throw new Error(data.message || "Failed to fetch all songs");
   }
 }
+
+export async function getLast7Songs() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/songsLast7Days`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+
+  const data = await res.json();
+  if (res.ok) {
+    return data;
+  } else {
+    throw new Error(data.message || "Failed to fetch last 7 songs");
+  }
+}
+
+export async function getSongById(songId) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/song/${songId}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+
+  const data = await res.json();
+  if (res.ok) {
+    return data;
+  } else {
+    throw new Error(data.message || "Failed to fetch song");
+  }
+}

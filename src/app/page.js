@@ -9,6 +9,9 @@ export default function Home() {
   const handleDailyClick = () => {
     router.push("/daily");
   };
+  const handleHistoryClick = () => {
+    router.push("/history");
+  };
   return (
     <div className={styles.page}>
       <header className={styles.header}>
@@ -25,7 +28,7 @@ export default function Home() {
                   <h2>Lag dagsins</h2>
                 </div>
               </div>
-              <div className={styles.card}>
+              <div className={styles.card} onClick={handleHistoryClick}>
                 <div className={styles.cardDetails}>
                   <h2>Lög síðustu 7 daga</h2>
                 </div>

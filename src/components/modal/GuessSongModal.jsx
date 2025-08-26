@@ -12,7 +12,6 @@ const GuessSongModal = ({ onClose, onSelect }) => {
     const fetchSongs = async () => {
       try {
         const allSongs = await getAllSongs();
-        console.log("Fetched songs:", allSongs);
         setSongs(allSongs || []);
       } catch (error) {
         console.error("Failed to fetch songs:", error);
@@ -34,9 +33,20 @@ const GuessSongModal = ({ onClose, onSelect }) => {
         <MyAutocomplete
           options={songs}
           label="Veldu lag"
-          onSelect={setSelectedSong}
+          onSelect={(value) => setSelectedSong(value)}
         />
-        <button className={styles.button}>Staðfesta</button>
+
+        <button
+          className={styles.button}
+          onClick={() => {
+            if (selectedSong) {
+              onSelect(selectedSong);
+              onClose();
+            }
+          }}
+        >
+          Staðfesta
+        </button>
       </div>
     </div>
   );
