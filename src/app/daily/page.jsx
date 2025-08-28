@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import { getDailySong } from "@/lib/api";
 import GuessSongModal from "@/components/modal/GuessSongModal.jsx";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
-import cookies from "js-cookie";
 
 const Daily = () => {
   const [dailySong, setDailySong] = useState(null);
