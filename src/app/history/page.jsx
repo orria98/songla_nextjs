@@ -2,7 +2,7 @@
 
 import { getLast7Songs } from "@/lib/api";
 import { useEffect, useState } from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import { use } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
@@ -11,8 +11,6 @@ const HistoryPage = () => {
   const [last7Songs, setLast7Songs] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const pathName = usePathname();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
     const fetchLast7Songs = async () => {
