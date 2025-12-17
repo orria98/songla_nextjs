@@ -16,8 +16,6 @@ export default function Home() {
     <div className={styles.page}>
       <header className={styles.header}>
         <h1>Söngla</h1>
-        <Link href="/login">About</Link>
-        <Link href="/admin">Admin</Link>
       </header>
       <main className={styles.main}>
         <div className={styles.ctas}>
@@ -30,12 +28,7 @@ export default function Home() {
               </div>
               <div className={styles.card} onClick={handleHistoryClick}>
                 <div className={styles.cardDetails}>
-                  <h2>Lög síðustu 7 daga</h2>
-                </div>
-              </div>
-              <div className={styles.card}>
-                <div className={styles.cardDetails}>
-                  <h2>Þín tölfræði</h2>
+                  <h2>Gömul lög</h2>
                 </div>
               </div>
             </div>

@@ -191,7 +191,7 @@ const Daily = () => {
               onClick={() => setIsGuessModalOpen(true)}
               onSelect={handleConfirmSong}
             >
-              Guess
+              Giska
             </button>
             <button
               className={styles.controlButton}
@@ -210,7 +210,7 @@ const Daily = () => {
               onClick={skipInstrument}
               disabled={skipDisabled}
             >
-              Skip
+              Næsta hljóðfæri
             </button>
           </div>
         </div>
