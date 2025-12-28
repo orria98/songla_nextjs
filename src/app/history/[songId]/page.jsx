@@ -1,12 +1,14 @@
 "use client";
 import styles from "./page.module.css";
 import { useState, useEffect, useRef } from "react";
-import { getDailySong, getSongById } from "@/lib/api";
-import { useRouter, useParams } from "next/navigation";
+import { getSongById } from "@/lib/api";
+import { useParams } from "next/navigation";
+import { recordGame, hasCompletedGame, getCompletedGame } from "@/lib/stats";
 import GuessSongModal from "@/components/modal/GuessSongModal.jsx";
+import GameEndStats from "@/components/GameEndStats/GameEndStats";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
-const Daily = () => {
+const HistorySong = () => {
   const [dailySong, setDailySong] = useState(null);
   const [instruments, setInstruments] = useState([]);
   const [currentInstrument, setCurrentInstrument] = useState(null);
@@ -16,18 +18,38 @@ const Daily = () => {
   const [revealHint, setRevealHint] = useState(false);
   const [skipDisabled, setSkipDisabled] = useState(false);
   const [isGuessModalOpen, setIsGuessModalOpen] = useState(false);
+  const [gameEnd, setGameEnd] = useState(false);
 
-  const router = useRouter();
+  const [guessCount, setGuessCount] = useState(0);
+  const [showStats, setShowStats] = useState(false);
+  const [gameResult, setGameResult] = useState(null);
+  const [alreadyPlayed, setAlreadyPlayed] = useState(false);
+  const [isPracticeMode, setIsPracticeMode] = useState(false);
+
   const { songId } = useParams();
 
   const audioRef = useRef(null);
   const currentInstrumentRef = useRef(null);
 
   useEffect(() => {
-    const fetchDailySong = async () => {
+    const fetchSong = async () => {
       try {
         const song = await getSongById(songId);
         setDailySong(song);
+
+        if (hasCompletedGame(songId)) {
+          const previousResult = getCompletedGame(songId);
+          setAlreadyPlayed(true);
+          setGameEnd(true);
+          setGameResult({
+            won: previousResult.won,
+            guessNumber: previousResult.guessNumber,
+            songTitle: song.title,
+            songArtist: song.artist,
+          });
+          setShowStats(true);
+        }
+
         const fetchedInstruments = song.instruments.map((inst) => ({
           name: inst.name,
           image: inst.image,
@@ -37,13 +59,13 @@ const Daily = () => {
         setCurrentInstrument(fetchedInstruments[0]);
         setLoading(false);
       } catch (error) {
-        console.error("Failed to fetch daily song:", error);
+        console.error("Failed to fetch song:", error);
         setLoading(false);
       }
     };
 
-    fetchDailySong();
-  }, []);
+    fetchSong();
+  }, [songId]);
 
   function numberWithCommas(x) {
     if (x === undefined || x === null || x === "") return "";
@@ -94,24 +116,42 @@ const Daily = () => {
     };
   }, [currentInstrument]);
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+  const endGame = (won, finalGuessCount) => {
+    if (!isPracticeMode) {
+      recordGame(songId, won, finalGuessCount, {
+        songTitle: dailySong.title,
+        songArtist: dailySong.artist,
+      });
+    }
+
+    setGameResult({
+      won,
+      guessNumber: finalGuessCount,
+      songTitle: dailySong.title,
+      songArtist: dailySong.artist,
+      isPractice: isPracticeMode,
+    });
+    setGameEnd(true);
+    setShowStats(true);
+  };
 
   const handleConfirmSong = (selectedSong) => {
     const [artist, title] = selectedSong.split(" - ");
+    const newGuessCount = guessCount + 1;
+    setGuessCount(newGuessCount);
 
     if (
       artist.trim().toLowerCase() === dailySong.artist.trim().toLowerCase() &&
       title.trim().toLowerCase() === dailySong.title.trim().toLowerCase()
     ) {
-      alert("Rétt!");
+      const instrumentsUsed = disabledInstruments.length + 1;
+      const hintUsed = revealHint ? 1 : 0;
+      const winRound = instrumentsUsed + hintUsed;
+      endGame(true, winRound);
     } else {
       if (skipDisabled) {
         if (revealHint) {
-          alert(
-            "Lag dagsins var: " + dailySong.title + " - " + dailySong.artist
-          );
+          endGame(false, newGuessCount);
         } else {
           setRevealHint(true);
         }
@@ -121,10 +161,59 @@ const Daily = () => {
     }
   };
 
+  const handleGiveUp = () => {
+    const instrumentsUsed =
+      disabledInstruments.length + (currentInstrument ? 1 : 0);
+    endGame(false, instrumentsUsed);
+  };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  const startPracticeMode = () => {
+    setAlreadyPlayed(false);
+    setIsPracticeMode(true);
+    setGameEnd(false);
+    setShowStats(false);
+    setGuessCount(0);
+    setDisabledInstruments([]);
+    setCurrentInstrument(instruments[0]);
+    setRevealHint(false);
+    setSkipDisabled(false);
+  };
+
+  if (alreadyPlayed && !showStats) {
+    return (
+      <div className={styles.page}>
+        <header className={styles.header}>
+          <h1>Eldra lag</h1>
+        </header>
+        <main className={styles.main}>
+          <div className={styles.ctas}>
+            <p style={{ textAlign: "center", fontSize: "18px" }}>
+              Þú ert búinn að spila þetta lag!
+            </p>
+            <button
+              className={styles.button}
+              onClick={() => setShowStats(true)}
+            >
+              <img src="/img/stats.svg" alt="" className={styles.buttonIcon} />
+              Sjá tölfræði
+            </button>
+            <button className={styles.button} onClick={startPracticeMode}>
+              Spila aftur (breytir ekki stats)
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <h1>Lag dagsins</h1>
+        <h1>Eldra lag</h1>
       </header>
       <main className={styles.main}>
         <div className={styles.ctas}>
@@ -176,7 +265,11 @@ const Daily = () => {
               </div>
             </div>
           </div>
-          {revealHint && <button className={styles.button}>Gefast upp</button>}
+          {revealHint && !gameEnd && (
+            <button className={styles.button} onClick={handleGiveUp}>
+              Gefast upp
+            </button>
+          )}
           <div className={styles.audioPlayerContainer}>
             <audio
               ref={audioRef}
@@ -184,33 +277,44 @@ const Daily = () => {
               style={{ display: "none" }}
             />
           </div>
-          <div className={styles.controls}>
+          {!gameEnd && (
+            <div className={styles.controls}>
+              <button
+                className={styles.button}
+                onClick={() => setIsGuessModalOpen(true)}
+              >
+                Giska
+              </button>
+              <button
+                className={styles.controlButton}
+                type="button"
+                onClick={handlePlayPause}
+                disabled={!currentInstrument?.audioUrl}
+              >
+                {isPlaying ? (
+                  <img src="/img/stop-button.png" alt="Pause" />
+                ) : (
+                  <img src="/img/play-button-arrowhead.png" alt="Play" />
+                )}
+              </button>
+              <button
+                className={styles.button}
+                onClick={skipInstrument}
+                disabled={skipDisabled}
+              >
+                Næsta hljóðfæri
+              </button>
+            </div>
+          )}
+          {gameEnd && (
             <button
               className={styles.button}
-              onClick={() => setIsGuessModalOpen(true)}
+              onClick={() => setShowStats(true)}
             >
-              Guess
+              <img src="/img/stats.svg" alt="" className={styles.buttonIcon} />
+              Sjá tölfræði
             </button>
-            <button
-              className={styles.controlButton}
-              type="button"
-              onClick={handlePlayPause}
-              disabled={!currentInstrument?.audioUrl}
-            >
-              {isPlaying ? (
-                <img src="/img/stop-button.png" alt="Pause" />
-              ) : (
-                <img src="/img/play-button-arrowhead.png" alt="Play" />
-              )}
-            </button>
-            <button
-              className={styles.button}
-              onClick={skipInstrument}
-              disabled={skipDisabled}
-            >
-              Skip
-            </button>
-          </div>
+          )}
         </div>
       </main>
 
@@ -224,8 +328,14 @@ const Daily = () => {
           </div>
         </div>
       )}
+
+      <GameEndStats
+        isOpen={showStats}
+        onClose={() => setShowStats(false)}
+        gameResult={gameResult}
+      />
     </div>
   );
 };
 
-export default Daily;
+export default HistorySong;

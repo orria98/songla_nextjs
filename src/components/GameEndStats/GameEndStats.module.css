@@ -1,0 +1,209 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: var(--background);
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  text-align: center;
+}
+
+.closeButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #555;
+}
+
+.closeButton:hover {
+  color: #000;
+}
+
+@media (prefers-color-scheme: dark) {
+  .closeButton {
+    color: #aaa;
+  }
+  .closeButton:hover {
+    color: #fff;
+  }
+}
+
+.practiceLabel {
+  margin: 0 0 8px 0;
+  padding: 4px 12px;
+  background: #f59e0b;
+  color: #000;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.title {
+  margin: 0 0 12px 0;
+  font-size: 24px;
+  color: var(--foreground);
+}
+
+.songReveal {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: var(--foreground);
+  opacity: 0.9;
+}
+
+.songReveal strong {
+  font-size: 16px;
+  display: block;
+  margin-top: 4px;
+}
+
+.guessInfo {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  color: var(--foreground);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.statBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 4px;
+}
+
+.statNumber {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--foreground);
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 11px;
+  color: var(--foreground);
+  opacity: 0.7;
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+.distributionSection {
+  margin-bottom: 16px;
+}
+
+.distributionSection h3 {
+  font-size: 14px;
+  margin: 0 0 12px 0;
+  color: var(--foreground);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.distribution {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.distributionRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.guessLabel {
+  width: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--foreground);
+  text-align: right;
+}
+
+.barContainer {
+  flex: 1;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.bar {
+  min-height: 24px;
+  background: #787c7e;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 8px;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.barHighlight {
+  background: #6aaa64;
+}
+
+.barCount {
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+}
+
+.button {
+  margin-top: 8px;
+  background: var(--foreground);
+  color: var(--background);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.button:hover {
+  transform: scale(1.02);
+}
+
+@media (max-width: 480px) {
+  .modal {
+    margin: 16px;
+    padding: 20px;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .statNumber {
+    font-size: 24px;
+  }
+}

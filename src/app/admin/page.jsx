@@ -8,7 +8,6 @@ import { useDailySong } from "@/context/DailySongContext";
 const AdminPage = () => {
   const { data: session } = useSession();
   const { instruments, setInstruments } = useDailySong();
-  // List of available images in public/img
   const instrumentImages = [
     "drum.png",
     "guitar-instrument.png",
@@ -163,7 +162,6 @@ const AdminPage = () => {
                 type="text"
                 placeholder="Difficulty"
               />
-              {/* Instrument input fields */}
               <input
                 className={styles.input}
                 type="text"
