@@ -160,3 +160,43 @@ export async function getSongById(songId) {
     throw new Error(data.message || "Failed to fetch song");
   }
 }
+
+export async function postSongStats(songId, won, guessNumber) {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/stats/${songId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ won, guessNumber }),
+        credentials: "include",
+      }
+    );
+    return res.ok;
+  } catch (err) {
+    console.error("Failed to post song stats:", err);
+    return false;
+  }
+}
+
+export async function getSongStats(songId) {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/stats/${songId}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+
+    if (res.ok) {
+      return await res.json();
+    }
+    return null;
+  } catch (err) {
+    console.error("Failed to fetch song stats:", err);
+    return null;
+  }
+}

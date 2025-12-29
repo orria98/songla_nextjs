@@ -1,7 +1,7 @@
 "use client";
 import styles from "./page.module.css";
 import { useState, useEffect, useRef } from "react";
-import { getDailySong } from "@/lib/api";
+import { getDailySong, postSongStats } from "@/lib/api";
 import { recordGame, hasCompletedGame, getCompletedGame } from "@/lib/stats";
 import GuessSongModal from "@/components/modal/GuessSongModal.jsx";
 import GameEndStats from "@/components/GameEndStats/GameEndStats";
@@ -44,6 +44,7 @@ const Daily = () => {
             guessNumber: previousResult.guessNumber,
             songTitle: song.title,
             songArtist: song.artist,
+            songId,
           });
           setShowStats(true);
         }
@@ -122,6 +123,7 @@ const Daily = () => {
         songTitle: dailySong.title,
         songArtist: dailySong.artist,
       });
+      postSongStats(songId, won, finalGuessCount);
     }
 
     setGameResult({
@@ -129,6 +131,7 @@ const Daily = () => {
       guessNumber: finalGuessCount,
       songTitle: dailySong.title,
       songArtist: dailySong.artist,
+      songId,
       isPractice: isPracticeMode,
     });
     setGameEnd(true);
