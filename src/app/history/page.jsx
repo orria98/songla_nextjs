@@ -1,6 +1,6 @@
 "use client";
 
-import { getLast7Songs } from "@/lib/api";
+import { getLast7Songs, getAllSongs} from "@/lib/api";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
@@ -15,7 +15,7 @@ const HistoryPage = () => {
   useEffect(() => {
     const fetchLast7Songs = async () => {
       try {
-        const songs = await getLast7Songs();
+        const songs = await getAllSongs();
         setLast7Songs(songs);
       } catch (error) {
         console.error("Failed to fetch last 7 songs:", error);
