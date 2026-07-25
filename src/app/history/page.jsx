@@ -15,7 +15,7 @@ const HistoryPage = () => {
   useEffect(() => {
     const fetchLast7Songs = async () => {
       try {
-        const songs = await getAllSongs();
+        const songs = await getSongsLast7Days();
         setLast7Songs(songs);
       } catch (error) {
         console.error("Failed to fetch last 7 songs:", error);
